@@ -30,15 +30,6 @@ class Node:
         Getter for the key internal variable
         """
         return self._key
-    
-    @key.setter
-    def key(self, new_key: str):
-        """Setter for the key internal variable
-            
-        Args:
-            new_key (str): The new key for the node
-        """
-        self._key = new_key
 
     @property
     def data(self):
