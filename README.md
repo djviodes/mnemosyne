@@ -15,8 +15,11 @@ that gap directly, not just talk about it.
 
 ## What's Here
 
-- **Python implementation** — `python/`, with `lru/` (LRU cache) and
-  `ttl/` (TTL/expiring cache)
+- **Python implementation** — `python/`, with `lru/` (LRU cache),
+  `ttl/` (TTL/expiring cache), and `data_structures/` (shared,
+  cache-agnostic building blocks — currently a hand-built doubly
+  linked list, used by `lru/` for eviction ordering; lives outside
+  `lru/` since it has no inherent connection to caching)
 - **Go implementation** — `go/`, with `lru/` (LRU cache) and `ttl/`
   (TTL/expiring cache)
 - Each implementation is self-contained, idiomatic to its language, and
@@ -43,11 +46,18 @@ two actual implementations:
 
 - **LRU cache** — manual hash map + doubly linked list,
   capacity-based eviction only, no shortcuts (`OrderedDict` /
-  `container/list`).
+  `container/list`). Python implementation (`python/lru/`) is
+  functionally complete — get/put/has/delete/clear/keys/size, with
+  eviction and recency tracked entirely by the doubly linked list
+  rather than borrowed from dict ordering — and manually verified
+  across eviction, refresh, mid-list updates, boundary capacities, and
+  clear/reuse. Unit tests not written yet; that's next. Go
+  implementation not started.
 - **TTL / expiring cache** — hash map with time-based expiration, no
-  capacity eviction. (The reference repo calls its version of this
-  "client-side caching," but that's a browser-storage concept that
-  doesn't apply here — what's reusable is the TTL logic.)
+  capacity eviction. Not started, in either language. (The reference
+  repo calls its version of this "client-side caching," but that's a
+  browser-storage concept that doesn't apply here — what's reusable is
+  the TTL logic.)
 
 Post-MVP: combine LRU + TTL into one cache, LFU, write-through vs.
 cache-aside, and Redis-backed distributed caching (not hand-rolled).

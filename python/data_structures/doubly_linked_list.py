@@ -11,7 +11,10 @@ class Node:
         next_node (Node): The next node in the doubly linked list.
         previous_node (Node): The previous node in the doubly linked list.
     """
-    def __init__(self, data: str, next_node: 'Node' = None, previous_node: 'Node' = None):
+    def __init__(self, key: str, data: str, next_node: 'Node' = None, previous_node: 'Node' = None):
+        # Initialize the key from the Map that points to the node
+        self._key = key
+
         # Initialize the data that is stored within the node
         self._data = data
 
@@ -20,6 +23,22 @@ class Node:
 
         # Initialize the previous node in the doubly linked list or default to null
         self._previous_node = previous_node
+
+    @property
+    def key(self):
+        """
+        Getter for the key internal variable
+        """
+        return self._key
+    
+    @key.setter
+    def key(self, new_key: str):
+        """Setter for the key internal variable
+            
+        Args:
+            new_key (str): The new key for the node
+        """
+        self._key = new_key
 
     @property
     def data(self):
@@ -127,13 +146,13 @@ class DoublyLinkedList:
         """
         self._last_node = last_node
 
-    def insert_at_front(self, value: str):
+    def insert_at_front(self, key: str, value: str) -> Node:
         """Adds a new node to the beginning of the doubly linked list.
         
         Args:
             value (str): The value that is stored in the new node.
         """
-        new_node = Node(data=value)
+        new_node = Node(key=key, data=value)
 
         # If there are no elements yet in the doubly linked list:
         if not self.first_node:
@@ -143,6 +162,8 @@ class DoublyLinkedList:
             new_node.next_node = self.first_node
             self.first_node.previous_node = new_node
             self.first_node = new_node
+
+        return new_node
 
     def move_to_front(self, target_node: Node):
         """Moves a node from anywhere in the doubly linked list to the front.
@@ -162,7 +183,6 @@ class DoublyLinkedList:
             target_node.next_node = self.first_node
             self.first_node.previous_node = target_node
             self.first_node = target_node
-
 
     # CONSIDER(david): remove_arbitrary_node trusts that target_node belongs to
     # *this* DoublyLinkedList instance. It catches a node that was never linked
@@ -215,3 +235,14 @@ class DoublyLinkedList:
                 return None
 
             return target_node
+
+    def clear_doubly_linked_list(self):
+        """
+        Clears the doubly linked list by setting the first and last node values to null
+
+        Notes:
+            We are intentionally leaving the rest of the nodes to be picked up by Python's garbage
+            collector as to maintain O(1) time complexity.
+        """
+        self.first_node = None
+        self.last_node = None

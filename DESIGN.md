@@ -113,6 +113,22 @@ both may eventually be combined post-MVP.
   both caches are in-memory and "in-memory" wasn't actually
   distinguishing anything.
 
+## Decided (2026-07-23)
+
+- **Data structure placement**: general-purpose, cache-agnostic data
+  structures (currently the doubly linked list backing the LRU cache)
+  live in `data_structures/`, not nested inside `lru/`, even though
+  the LRU cache is currently their only consumer. The TTL cache
+  specifically doesn't need one (see Implementation approach above),
+  so "used by every cache type" was never actually the justification —
+  the structure itself having no inherent connection to caching is.
+- **Node identity**: each linked-list node carries both `key` and
+  `data`, not just the cached value. Needed so eviction can go from
+  "the doubly linked list's actual least-recently-used node" back to
+  "which key to remove from the hash map" — without it, eviction has
+  no way to identify what to remove from the map once it's reading
+  recency from the list itself instead of the map's iteration order.
+
 ## Open Questions
 
 - None currently open — resolved decisions are captured above and in
