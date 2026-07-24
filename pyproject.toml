@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mnemosyne"
+version = "0.1.0"
+description = "A small caching library (LRU, TTL, ...) built for hands-on fluency with caching strategies."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [{ name = "David Viodes" }]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["python*"]
+
+[tool.pytest.ini_options]
+testpaths = ["python"]
+
+[tool.coverage.run]
+source = ["python"]
